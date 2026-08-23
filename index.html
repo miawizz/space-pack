@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Space | Silly Moments</title>
+  <meta name="theme-color" content="#127490" />
+  <link rel="icon" type="image/png" href="space-icon.png">
+  <link rel="apple-touch-icon" href="space-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:#fff9f3;
+      --ink:#14323c;
+      --muted:#6b7f88;
+      --teal:#127490;
+      --teal2:#1690b4;
+      --rust:#b24627;
+      --rust2:#c95e3c;
+      --yellow:#f8b934;
+      --pink:#d94b7f;
+      --coral:#e86f5c;
+      --card:#ffffff;
+      --soft:#e4f3f7;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:'Poppins',sans-serif;min-height:100vh;padding:22px 24px 60px}
+    button{font-family:inherit}
+    .shell{max-width:960px;margin:0 auto}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .hub-button,.theme-back{display:inline-block;background:rgba(0,0,0,.75);color:#fff;border:0;border-radius:10px;padding:9px 12px;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer}
+    .circle-mode .hub-button{display:none!important}
+    .pack-header{text-align:center;margin:8px auto 22px}
+    .pack-icon{width:150px;height:150px;object-fit:contain;border-radius:24px;display:block;margin:0 auto 8px}
+    .pack-header h1{font-family:'Baloo 2',sans-serif;color:var(--teal);font-size:2rem;margin:0}
+    .pack-header p{margin:4px auto 0;color:#4c6670;max-width:620px}
+    .screen{display:none}
+    .screen.active{display:block}
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+    .menu-card{border:0;border-radius:18px;padding:18px 16px;background:var(--teal);color:#fff;text-align:left;cursor:pointer;box-shadow:0 5px 16px rgba(0,0,0,.09);transition:.12s ease}
+    .menu-card:hover{transform:translateY(-2px);background:var(--teal2)}
+    .menu-card strong{display:block;font-size:1.08rem;margin-bottom:5px}
+    .menu-card span{font-size:.84rem;opacity:.86;line-height:1.35}
+    .game-header{text-align:center;margin:4px auto 12px}
+    .game-header h2{font-family:'Baloo 2',sans-serif;color:var(--teal);font-size:1.75rem;margin:6px 0 2px}
+    .game-header p{color:var(--muted);margin:0 auto;max-width:650px;font-size:.92rem}
+    .generator-card{max-width:860px;margin:18px auto;background:#fff;border-radius:20px;padding:18px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+    .prompt{margin:16px auto;font-size:1.2rem;line-height:1.5;padding:20px;background:#fff;border-radius:16px;border:2px dashed var(--yellow);min-height:125px;display:flex;align-items:center;justify-content:center;text-align:center}
+    .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:11px auto}
+    .btn{background:var(--rust);color:#fff;border:0;padding:12px 18px;border-radius:28px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .btn:hover{background:var(--rust2)}
+    .btn.secondary{background:#ffe9d6;color:#6b3a28}
+    .btn[disabled]{opacity:.45;cursor:not-allowed}
+    .favorites{max-width:860px;margin:22px auto 0;text-align:left}
+    .fav-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .fav-head h3{margin:0;color:#7a3e2e;font-size:1.05rem}
+    .fav-list{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:9px}
+    .fav-item{background:#fff;border:1px solid #ffdcbf;border-radius:13px;padding:11px 13px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .fav-item button{border:0;background:#ffe9d6;color:#6b3a28;border-radius:9px;padding:6px 9px;cursor:pointer}
+    .muted{color:var(--muted);font-size:.88rem}
+    .slot-card{max-width:860px;margin:18px auto;background:var(--yellow);border-radius:28px;padding:1.25rem;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    .slots{display:grid;grid-template-columns:1fr;gap:.7rem}
+    .slot{background:var(--pink);color:#fff9f3;border-radius:18px;padding:1rem .8rem;min-height:72px;display:grid;place-items:center;font-size:clamp(1.15rem,6vw,2.35rem);line-height:1;font-weight:800;text-transform:uppercase;word-break:break-word;text-align:center}
+    .slot:nth-child(2){background:var(--teal)} .slot:nth-child(3){background:var(--coral)}
+    .doodle-sentence{background:rgba(255,255,255,.92);border:2px dashed #fff;border-radius:18px;margin:1rem auto 0;padding:1rem;font-size:1.1rem;font-weight:600;color:#53322b}
+    .plot-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+    .plot-card{background:#fff;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.07);padding:16px}
+    .plot-card h3{color:var(--rust2);margin:0 0 8px;font-size:1rem}
+    .plot-out{background:#fff;border:2px dashed #d7e3e8;border-radius:16px;padding:14px;min-height:74px;display:flex;align-items:center;font-weight:600}
+    .rec-card{background:#fff;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.07);padding:16px;margin:14px 0}
+    .footer{text-align:center;color:#777;font-size:.78rem;margin-top:34px;line-height:1.5}
+    #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--teal);color:#fff;padding:9px 13px;border-radius:11px;opacity:0;pointer-events:none;transition:.2s;z-index:9999}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+    @media(min-width:720px){.slots{grid-template-columns:1fr 1fr 1.2fr} .slot{min-height:120px}}
+    @media(min-width:860px){.plot-grid{grid-template-columns:1fr 1fr 1fr}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <a class="hub-button" href="https://miawizz.github.io/php-app-hub/">← Back to Hub</a>
+    <button class="theme-back" id="themeBack" style="display:none">← Space Games</button>
+  </div>
+
+  <section id="homeScreen" class="screen active">
+    <div class="pack-header">
+      <img src="space-icon.png" alt="Space theme icon" class="pack-icon">
+      <h1>SPACE</h1>
+      <p>Choose a game and get silly with astronauts, aliens, planets, rockets, stars, and more.</p>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-card" data-screen="youare"><strong>You Are...</strong><span>Ridiculous physical acting prompts.</span></button>
+      <button class="menu-card" data-screen="sounds"><strong>Who Can Sound Like...</strong><span>Silly sound prompts.</span></button>
+      <button class="menu-card" data-screen="faces"><strong>Make This Face</strong><span>Facial expression prompts.</span></button>
+      
+      <button class="menu-card" data-screen="wyr"><strong>Would You Rather</strong><span>Choose between two imaginary dilemmas.</span></button>
+      <button class="menu-card" data-screen="plot"><strong>Plot Twist</strong><span>Build a silly story together and record it as you go.</span></button>
+      <button class="menu-card" data-screen="doodle"><strong>What Should We Doodle?</strong><span>Shuffle up a werid drawing prompt.</span></button>
+    </div>
+  </section>
+
+  <section id="youareScreen" class="screen">
+    <div class="game-header"><h2>Space You Are...</h2><p>Tap for a random prompt and act it out.</p></div>
+    <div class="generator-card" data-simple-game="youare"></div>
+  </section>
+
+  <section id="soundsScreen" class="screen">
+    <div class="game-header"><h2>Space Who Can Sound Like...</h2><p>Use your voice to make the sound.</p></div>
+    <div class="generator-card" data-simple-game="sounds"></div>
+  </section>
+
+  <section id="facesScreen" class="screen">
+    <div class="game-header"><h2>Space Make This Face</h2><p>Read the situation and make the face - try to freeze like a snapshot!</p></div>
+    <div class="generator-card" data-simple-game="faces"></div>
+  </section>
+
+  
+
+  <section id="wyrScreen" class="screen">
+    <div class="game-header"><h2>Space Would You Rather</h2><p>Pick one and explain your choice!</p></div>
+    <div class="generator-card" data-simple-game="wyr"></div>
+  </section>
+
+  <section id="plotScreen" class="screen">
+    <div class="game-header"><h2>Space Plot Twist</h2><p>Start with a title, "Once upon a time," tell the story together, then tap for a random plot twist whenever you need one.</p></div>
+    <div class="rec-card">
+      <h3 style="margin-top:0;color:var(--rust2)">Record Your Story</h3>
+      <div class="plot-out" id="recStatus">Ready to record. Your audio stays on your device.</div>
+      <div class="btns">
+        <button class="btn" id="recStart">Start recording</button>
+        <button class="btn secondary" id="recPause" disabled>Pause</button>
+        <button class="btn secondary" id="recStop" disabled>Stop</button>
+        <button class="btn secondary" id="recPlay" disabled>Play</button>
+        <button class="btn secondary" id="recDownload" disabled>Download</button>
+      </div>
+      <audio id="player" controls style="width:100%;margin-top:8px;display:none"></audio>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card">
+        <h3>STORY TITLE...</h3>
+        <div class="plot-out" id="titleOut">Tap below to get a title</div>
+        <div class="btns"><button class="btn" id="titleNext">GET A TITLE!</button><button class="btn secondary" id="titleBack">Back</button><button class="btn secondary" id="titleFwd">Forward</button></div>
+      </div>
+      <div class="plot-card">
+        <h3>READY FOR A PLOT TWIST...?</h3>
+        <div class="plot-out" id="twistOut">Tap below for a new idea</div>
+        <div class="btns"><button class="btn" id="twistNext">PLOT TWIST!</button><button class="btn secondary" id="twistBack">Back</button><button class="btn secondary" id="twistFwd">Forward</button></div>
+      </div>
+      <div class="plot-card">
+        <h3>READY TO WRAP IT UP...?</h3>
+        <div class="plot-out" id="wrapOut">Tap below for an ending idea</div>
+        <div class="btns"><button class="btn secondary" id="wrapNext">IDEAS FOR HOW TO END...</button><button class="btn secondary" id="wrapBack">Back</button><button class="btn secondary" id="wrapFwd">Forward</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="doodleScreen" class="screen">
+    <div class="game-header"><h2>Space What Should We Doodle?</h2><p>Shuffle an adjective, subject, and action into one ridiculous drawing prompt that you can either draw separately or work on together!</p></div>
+    <div class="slot-card">
+      <div class="slots"><div class="slot" id="slotAdj">WHAT</div><div class="slot" id="slotSubject">SHOULD</div><div class="slot" id="slotAction">WE DOODLE?</div></div>
+      <div class="doodle-sentence" id="doodlePrompt">Tap the button below to shuffle up a Space drawing prompt!</div>
+      <div class="btns"><button class="btn" id="doodleNext">What should we doodle?</button></div>
+      <div class="btns"><button class="btn secondary" id="doodleBack">Back</button><button class="btn secondary" id="doodleFwd">Forward</button></div>
+      <div class="btns"><button class="btn secondary" id="doodleSave">Save to Favorites</button></div>
+    </div>
+    <div class="favorites">
+      <div class="fav-head"><h3>Doodle Favorites</h3><div><button class="btn secondary" id="doodleCopy">Copy All</button> <button class="btn secondary" id="doodleClear">Clear</button></div></div>
+      <p class="muted" id="doodleEmpty">No favorites yet.</p><ul class="fav-list" id="doodleFavList"></ul>
+    </div>
+  </section>
+
+  <p class="footer">© 2026 Mia Wisinski, Playful Heart Parenting. For personal use only by purchasers. Please do not share without permission.</p>
+</div>
+<div id="toast"></div>
+
+<script>
+const DATA = {
+  youare: [
+  "You are an astronaut walking on the moon bouncing and hopping because you weigh about one-sixth as much as you do on Earth!",
+  "You are an alien trying to dance like a human but you have six arms…",
+  "You are a rocket ship blasting off into space.",
+  "You are an astronaut floating in zero gravity and it’s so relaxing you decide to take a nap as you float",
+  "You are a flying saucer zooming around just to mess with people",
+  "You are falling into a black hole and stretching out like spaghetti!",
+  "You are the planet Mercury and you’re going around the sun at 107,000 miles per hour!",
+  "You’re the red spot on Jupiter (which is actually a huge storm that has been blowing for hundreds of years!)",
+  "You are an astronaut trying to eat lunch in space but your bites keep floating away from you",
+  "You are an alien trying to walk on your feet like a human even though you usually hop on your head so it’s hard to find your balance",
+  "You are a meteor zooming through Earth’s atmosphere and getting hotter and hotter!",
+  "You are a spaceship slowly circling around the moon just admiring how pretty it is",
+  "You are a mouse who fell asleep inside a rocket ship and you wake up when you’re suddenly blasting off to space",
+  "You are an alien with four arms trying to learn how to juggle",
+  "You are the planet Uranus and you’re rotating on your side",
+  "You are an astronaut growing 3% taller in space because of microgravity",
+  "You are Saturn trying to hula hoop with all of your rings.",
+  "You are a shooting star streaking across the sky",
+  "You are Neptune and you are taking your sweet time to orbit around the sun (Neptune has the slowest orbital speed of all major planets in our solar system)",
+  "You are the star they name “Twinkle Twinkle Little Star” after and you’re twinkling as hard as you can to keep up your reputation.",
+  "You are a 600-mile wide asteroid trying to show off how big you are as you fly through space",
+  "You are a very shy baby alien trying to sneak onto a human’s spaceship",
+  "You are a neutron star spinning around hundreds of times per second!",
+  "You are a space rover slowly climbing the steepest hill on Mars.",
+  "You are the sun rising in the morning so excited to wake everyone up",
+  "You are the moon blocking out the sun for a solar eclipse and you’re so excited to have all the attention for once during the day",
+  "You are a comet zooming past Earth",
+  "You are a Martian trying to sweep up all the dust on Mars, but every time you finish sweeping, a giant gust of wind blows it everywhere again!",
+  "You are the planet Earth trying to carry every single person, animal, building, mountain, and ocean at the same time, WHILE spinning!",
+  "You are the ocean tide moving in and out as the moon’s gravity pulls on you!",
+  "You are the Earth spinning around and around and suddenly getting VERY dizzy.",
+  "You are an alien spaceship racer, zooming through space and swerving around all the space debris!",
+  "You are a UFO trying to sneakily fly around and spy on Earth without anyone noticing you.",
+  "You are an alien baby taking its very first steps with all 60 of your legs and 400 toes!",
+  "You are a big cloud trying your best to cover up the sun.",
+  "You are the giant glowing tail on a comet that’s racing through space and you’re showing off how bright you are.",
+  "You are a satellite orbiting Earth and taking pictures of everything you see.",
+  "You are a Mars rover bumping over a bunch of huge rocks.",
+  "You are a parachute on a space capsule opening up as BIG as you can to help the astronauts gently float back down to Earth!",
+  "You are a space capsule splashing down into the ocean after a long trip through space!",
+  "You are a new star forming inside a giant cloud of gas and dust, slowly getting bigger and brighter!",
+  "You are a rocket that is startled by how fast you’re going.",
+  "You are an alien that just drank a whole pot of coffee and you didn’t realize it was going to give you a bunch of energy…",
+  "You are a Milky Way candy bar being eaten by an astronaut in outer space while they look at the actual Milky Way!",
+  "You are an astronaut trying to moonwalk on the actual moon.",
+  "You are a baby planet getting bigger and bigger as space rocks and dust keep crashing into you!",
+  "You are an alien that just ate a whole birthday cake not realizing how much sugar was in it…",
+  "You are a UFO trying to beam up a cow, but the cow is WAY heavier than you thought.",
+  "You are an alien having your picture taken for the first time and when the flash goes off it scares the stardust out of you!",
+  "You are an astronaut returning from space, splashing down in the ocean, and celebrating because you made it back to Earth!"
+],
+  sounds: [
+  "The moon yawning as it starts the night shift because it didn’t get enough sleep",
+  "An alien arguing with another alien over whether or not the moon is made out of cheese (in alien language)",
+  "A rocket blasting off into space but it’s super nervous…",
+  "An astronaut bouncing around on the moon having the time of his life?",
+  "A UFO full of aliens zooming past Earth and then screeching to a stop because earth is really cool and it wants to visit…",
+  "A space robot exploring a new planet",
+  "An alien laughing at how funny humans look",
+  "Pluto trying to convince the other planets he should be a planet again",
+  "An astronaut talking through a crackly space radio",
+  "A black hole complaining that it’s hungry and doesn’t have anything to eat",
+  "An alien trying really hard to convince Earthlings that it’s a human but it’s really obvious he’s an alien…",
+  "A shooting star that cannot BELIEVE how fast it’s going",
+  "The Earth trying to tell a story but she keeps falling asleep because she’s 4.5 billion years old and is TIRED",
+  "The sun complaining that it’s having hot flashes",
+  "A meteor zooming through space but it has the hiccups",
+  "An astronaut who thinks they just discovered a brand-new planet but then turn around and see another astronaut already standing there waving at them.",
+  "An alien eating pizza for the first time and discovering how amazing it is",
+  "A cow jumping over the mooooon",
+  "A human trying to talk to an alien in alien language",
+  "A rocket engine trying to start but having trouble?",
+  "An alien sneezing through its 15 noses",
+  "A space robot whose batteries are dying",
+  "A piece of space dust that’s swirling around like crazy in the storm on Jupiter",
+  "A telescope that’s finally getting used for the first time in 25 years and it’s pumped to look at the night sky",
+  "An alien baby throwing a tantrum",
+  "An alien trying to laugh like a human",
+  "An alien daddy singing a lullaby to his baby",
+  "A dog riding in a rocket ship",
+  "The moon howling at the wolves howling at the moon",
+  "A mommy star singing twinkle twinkle little star to its baby star but it keeps falling asleep"
+],
+  faces: [
+  "You just saw an alien peeking through your spaceship window and it’s waving enthusiastically at you",
+  "You’re tasting space food for the first time and it’s kind of good but also kind of gross…",
+  "You’re about to blast off on your first rocket ship ride and you’re nervous but also super excited",
+  "You just landed on the moon and discovered it’s actually a giant chocolate chip cookie",
+  "A meteor just zoomed right past your spaceship and barely missed hitting you",
+  "You just looked up at the sky and saw a constellation that looks exactly like your own face",
+  "You just saw 10 shooting stars in a row and you’re trying to make the biggest wish you’ve ever wished",
+  "Your snack just floated away in zero gravity.",
+  "You’re floating in space and you see a black hole",
+  "A UFO is hovering above you and you’re trying to decide if it’s cool or scary",
+  "A tiny alien just popped out of a spaceship and even though it’s weird it’s extremely cute",
+  "You just walked in on an alien eating all your dog’s food",
+  "You just realized you’re floating in mid-air",
+  "You just got invited to go to the moon!",
+  "You hear weird giggling sounds and look over to see two aliens pointing at you and laughing",
+  "You were just looking through your telescope and discovered a strange new color-changing star",
+  "You just did a really stinky burp inside your space helmet but you can’t take it off",
+  "You’re trying to scream in space but there’s no sound because it’s a vacuum!",
+  "You just heard a strange little alien voice coming from underneath your chair",
+  "You just got off an astronaut training simulator that spun you around and around and you are SO dizzy!",
+  "You just looked in the mirror and realize you’ve somehow grown alien antennae",
+  "You’re not sure… but it looks like the moon just WINKED at you?!",
+  "You just looked up and saw a beautiful full moon and it’s SO pretty it makes you want to cry, but you’re trying to act tough.",
+  "It’s your first week in space and you have a super puffy face because that’s what happens with zero gravity!",
+  "You just landed on a planet with aliens and they all look EXACTLY like you!?"
+],
+  wyr: [
+  "Would you rather have a planet named after you or a constellation named after you?",
+  "Would you rather have antigravity shoes that let you bounce and float or be able to float all your food into your mouth so that you never even have to use a fork or spoon?",
+  "Would you rather have a really cute pet alien or a space robot that can go into space and bring you back cool things like moon rocks?",
+  "Would you rather be woken up every morning by the song “Twinkle Twinkle Little Star” or by the song “Rocket Man”?",
+  "Would you rather have to wear a spacesuit every day with no helmet or any outfit you want but with an astronaut helmet every day?",
+  "Would you rather be able to communicate with friendly aliens or have magic telescope eyes that let you see into space whenever you want?",
+  "Would you rather have to ride a really fast flying saucer that makes you dizzy everywhere you go but gets you there right away or a really slow rocket ship with a super comfy bed and unlimited snacks?",
+  "Would you rather there be zero gravity in your room and you have to sleep strapped to a wall like an astronaut or there’s extra gravity in your room so everything feels really heavy?",
+  "Would you rather have every wish you ever make on a shooting star come true or be able to safely visit anywhere in space for 20 minutes at a time just by snapping your fingers?",
+  "Would you rather have rings that are always floating around your waist like Saturn or a comet tail that follows behind you everywhere you go?",
+  "Would you rather have alien antennae or four alien arms?",
+  "Would you rather have to moonwalk everywhere you go or float three feet above the ground all day?",
+  "Would you rather have a tiny black hole in your pocket that you can conveniently throw trash into or a tiny sun that keeps you warm when you’re cold?",
+  "Would you rather have a little alien that sits on your shoulder all day giving you unsolicited advice or a big alien that sits in your living room and demands snacks every time it sees you?",
+  "Would you rather have to change your name to “Neptune” or “Jupiter”?",
+  "Would you rather have to shout “Blast off!!” every time you stand up or shout “Houston, we have a problem!” every time you make a minor mistake?",
+  "Would you rather have to travel all the way to space once a month just to get your groceries for the month or have aliens deliver the groceries to you but they always get it terribly wrong and bring weird stuff you didn’t order?",
+  "Would you rather have a miniature moon in your room as a night light or a miniature sun as a heater?",
+  "Would you rather have to announce, “This is one small step for man, one giant leap for mankind” every time you take your first step after sitting down or have to say, “The eagle has landed” every time you sit down?",
+  "Would you rather get beamed up into a spaceship full of friendly aliens for a day or have an alien follow you around on Earth all day and you get to show them around?",
+  "Would you rather your car look exactly like a rocket ship or exactly like an alien spaceship?",
+  "Would you rather be able to run as fast as the speed of light or be able to jump into outer space and fly around space without needing a spacesuit?",
+  "Would you rather have to wear a star-shaped costume all year round or a giant solar system hat with all the planets orbiting around the sun?",
+  "Would you rather have an alien friend that copies everything you do but they’re super nice to you or a robot that does anything you ask it to but it’s really cranky?",
+  "Would you rather have your room be decorated so that it looks exactly like you’re in outer space when you walk in or have your room look like the inside of a spaceship with buttons and controls everywhere?",
+  "Would you rather have a friendly alien sleep over at your house or sleep over at a friendly alien’s house?"
+],
+  titles: [
+  "Amy the Universe’s Tiniest Alien",
+  "Arnold the Alligator Who Wanted to be an Astronaut",
+  "Journey to the Stinkiest Planet in the Galaxy",
+  "The Lonely Alien",
+  "The Day They Discovered the Moon Was Made of Cheese",
+  "The Toy Rocket Ship Who Thought He Was Real",
+  "Marsha the Martian’s First Day on Earth",
+  "Rhinos in Space",
+  "The First Llama on the Moon",
+  "The Day Someone Stole Saturn’s Rings!",
+  "The Secret Alien Living in the Basement",
+  "Pizza Party in Space",
+  "The Star Who Was Too Tired to Twinkle",
+  "Grandma’s Epic Birthday Party in Space",
+  "The Day the Aliens Stole all the Donuts on Earth",
+  "Albert the Astronaut and his Rocket Ship Made of Toilet Paper Rolls",
+  "The UFO That Landed at School",
+  "The Next Door Neighbor Who Was Actually an Alien",
+  "Ronald the Space Robot",
+  "The 500th Annual Martian Dance Competition",
+  "The Black Hole Who Just Wanted a Snack",
+  "Planet of the Pigs",
+  "Blastoff to Planet Peanut Butter",
+  "Rhonda the Little Rocket With a BIG Dream",
+  "The Day of No Gravity",
+  "The Mouse who Accidentally Blasted Into Space",
+  "Three Aliens, a Broken Spaceship, and a Chicken",
+  "Pluto’s Plan to Become a Planet Again",
+  "The Star Who Was Afraid of the Dark",
+  "The Day the moon tried to steal the sun’s job",
+  "The Little Girl who caught a Shooting Star in a Jar"
+],
+  twists: [
+  "Suddenly they heard sniffling and soft crying coming from around the corner… there was a little alien who had just dropped their ice cream on the floor.",
+  "10, 9, 8, 7, 6, 5, 4, 3, 2, 1… BLAST OFF! Announced a voice and they realized there was a rocket launch happening right behind them…",
+  "“Take me to your leader!” demanded a funny sounding voice and they turned to see a talking goat wearing a cape and a space helmet staring at them.",
+  "Just then, a shooting star blazed across the sky and they knew EXACTLY what to wish for…",
+  "“Help! HELP!” cried a voice from out of nowhere. They turned to see the grandma next door being beamed up by a UFO!",
+  "Just then, the sky darkened and they looked up to see a bunch of donut-shaped spaceships blocking out the sun and tossing donuts down to Earth…",
+  "“You look awfully familiar… have we met?” called a voice, and they noticed a very polite alien hopping over to greet them.",
+  "Suddenly, a small meteorite crashed into the backyard next door and the neighbor screamed, “Not my petunias!!!”",
+  "Just then, a funny looking creature zoomed by in a flying saucer and said, “Hop on in. No time to explain. You must trust me!”",
+  "Suddenly, everyone started floating up slowly off the ground… “Holy Space-bananas!” cried a voice, “I’ve done it! I’ve really done it! I’ve invented the world’s most powerful anti-gravity machine!”",
+  "Just then, the phone rang. “Hello? This is NASA,” said the caller. “We need you to go to space immediately. You’re the only one who can accomplish this mission.”",
+  "Suddenly, they heard a strange yet beautiful sound getting louder and louder… they turned to see a group of aliens singing a song and realized it was a singing telegram from outer space! Who could have sent it??",
+  "Suddenly a voice shrieked, “Hey, give me that back!!” and they saw a kid chasing after his toy car as an alien tried to beam it up into space.",
+  "“Hey, has anyone seen my spaceship keys?!” called a frazzled voice, and they turned to see an alien grandpa shuffling around looking for something.",
+  "Just then it started raining really hard, but it was sparkly, shimmery rain.",
+  "Suddenly a voice said, “Um, hi. I’m Agnes. It’s my first day on Earth and I was wondering if you could show me around?”",
+  "Just then a mysterious shadow appeared and when they looked up there was a spaceship hovering over the ground, blasting the song, “Do Your Ears Hang Low?” and indeed an alien with very long ears started descending from the spaceship.",
+  "Just then they looked up and noticed that all the clouds in the sky were mysteriously shaped like pigs. “What could it mean??” they wondered…",
+  "“Beep boop beep,” beeped a voice out of nowhere. “I am Samuel the space robot. I have brought you your astronaut suit.”",
+  "Suddenly there was a sneeze so big it rumbled the ground and shook the trees. “Excuse me,” a voice apologized. “I think I’m allergic to planet Earth.”",
+  "Suddenly a mysterious map floated down from the sky… it was a map to another galaxy, along with an invitation to an intergalactic birthday party!",
+  "Just then, it started to get hot… very, very hot. They heard a big booming laugh and looked up to see the sun cackling. “Sorry!” it said. “Sometimes I forget how hot I am!”",
+  "Just then, a spaceship landed, and two tiny aliens emerged, riding on miniature donkeys. “Greetings,” they said. “We would like to invite you back to our planet to eat Flerbitty Dermple Nuggets and Scrimple-Pop Boba.”",
+  "“Come with me at once!” shouted a voice and they turned to see an astronaut waving them over to his rocket ship.",
+  "Suddenly a space taxi pulled up and an alien who kind of looked like a giant chipmunk squeaked, “Someone call for a ride?”"
+],
+  wraps: [
+  "End the story with something happy",
+  "Finish by solving the main problem",
+  "Have the characters feel safe again",
+  "Let everyone get what they were hoping for",
+  "Show how things have changed since the beginning",
+  "End with the characters making a plan for next time",
+  "Wrap it up with a feeling — excitement, relief, joy, or calm",
+  "Leave the story open so it could continue later",
+  "End in the same place or situation where it began",
+  "Give the final line to the main character"
+],
+  adjectives: [
+  "glowing",
+  "sparkly",
+  "teeny-tiny",
+  "gigantic",
+  "sleepy",
+  "speedy",
+  "wobbly",
+  "stinky",
+  "grumpy",
+  "confused",
+  "slimy",
+  "rainbow",
+  "three-eyed",
+  "six-armed",
+  "fuzzy",
+  "polka-dotted",
+  "super-stretchy",
+  "googly-eyed",
+  "metallic",
+  "bouncy",
+  "invisible",
+  "gassy",
+  "glittery",
+  "mischievous",
+  "lumpy"
+],
+  subjects: [
+  "astronaut",
+  "alien",
+  "baby alien",
+  "Martian",
+  "space robot",
+  "rocket ship",
+  "UFO",
+  "satellite",
+  "Mars rover",
+  "space capsule",
+  "telescope",
+  "moon",
+  "sun",
+  "star",
+  "shooting star",
+  "comet",
+  "asteroid",
+  "planet",
+  "black hole",
+  "Earth",
+  "Saturn",
+  "Jupiter",
+  "moon rock",
+  "alien spaceship",
+  "space monster"
+],
+  actions: [
+  "bouncing around on the moon",
+  "trying to catch a floating snack",
+  "moonwalking on the moon",
+  "trying to drive a Mars rover",
+  "blasting off into space",
+  "floating around in zero gravity",
+  "trying to catch a runaway spacesuit",
+  "looking through a giant telescope",
+  "collecting moon rocks",
+  "trying to talk to an alien",
+  "taking a selfie on the moon",
+  "planting a flag on a strange new planet",
+  "trying to repair a spaceship",
+  "riding on a comet",
+  "trying to dodge space debris",
+  "having a picnic on the moon",
+  "searching for aliens",
+  "trying to squeeze into a spacesuit",
+  "flying a UFO",
+  "trying to eat spaghetti in zero gravity",
+  "dancing with an alien",
+  "taking a spacewalk",
+  "trying to catch a shooting star",
+  "building a rocket out of cardboard boxes",
+  "having a dance party on Mars",
+  "eating a giant sandwich",
+  "jumping on a trampoline",
+  "walking a tiny dog",
+  "doing ballet",
+  "brushing its teeth",
+  "blowing bubbles",
+  "taking a bubble bath",
+  "playing the drums",
+  "getting a haircut",
+  "licking an ice cream cone",
+  "playing hide-and-seek",
+  "jumping on a pogo stick",
+  "playing the piano",
+  "having a pillow fight",
+  "making pancakes",
+  "playing video games",
+  "singing karaoke",
+  "trying to hula hoop",
+  "riding a bicycle",
+  "having a water balloon fight",
+  "juggling bananas",
+  "trying to do a cartwheel",
+  "playing with slime",
+  "eating a giant bowl of cereal",
+  "walking around in flippers"
+]
+};
+
+const NS = "space-pack";
+const screens = document.querySelectorAll(".screen");
+const themeBack = document.getElementById("themeBack");
+
+function showScreen(name) {
+  screens.forEach(s => s.classList.remove("active"));
+  const target = document.getElementById(name + "Screen");
+  if (target) target.classList.add("active");
+  themeBack.style.display = name === "home" ? "none" : "inline-block";
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-screen]").forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.screen)));
+themeBack.addEventListener("click", () => showScreen("home"));
+
+if (new URLSearchParams(location.search).get("circle") === "1") document.body.classList.add("circle-mode");
+
+function shuffle(a) {
+  for (let i=a.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function toast(msg) {
+  const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show");
+  clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>el.classList.remove("show"),1200);
+}
+function makeDeck(key, items) {
+  const base = `${NS}_${key}`;
+  const version = JSON.stringify(items).length + ":" + items.length;
+  const load = (k,f) => { try { return JSON.parse(localStorage.getItem(base+"_"+k)) ?? f; } catch { return f; } };
+  let order=load("order",null), idx=Number(localStorage.getItem(base+"_idx")||0), hist=load("hist",[]), pos=Number(localStorage.getItem(base+"_pos")||0);
+  if (localStorage.getItem(base+"_ver") !== version || !Array.isArray(order) || order.length!==items.length) {
+    order=shuffle([...Array(items.length).keys()]); idx=0; hist=[]; pos=0;
+  }
+  function save() {
+    localStorage.setItem(base+"_ver",version); localStorage.setItem(base+"_order",JSON.stringify(order));
+    localStorage.setItem(base+"_idx",String(idx)); localStorage.setItem(base+"_hist",JSON.stringify(hist)); localStorage.setItem(base+"_pos",String(pos));
+  }
+  function next() {
+    if (pos<hist.length) hist.splice(pos);
+    let pick=order[idx++]; 
+    if (idx>=order.length) { const avoid=pick; order=shuffle([...Array(items.length).keys()]); if(items.length>1 && order[0]===avoid) [order[0],order[1]]=[order[1],order[0]]; idx=0; }
+    hist.push(pick); if(hist.length>500) hist.shift(); pos=hist.length; save(); return pick;
+  }
+  function back() { if(pos<=1)return null; pos--; save(); return hist[pos-1]; }
+  function fwd() { if(pos>=hist.length)return null; const i=hist[pos]; pos++; save(); return i; }
+  function current() { return pos>0 && hist.length ? hist[pos-1] : null; }
+  function canBack() { return pos>1; } function canFwd() { return pos<hist.length; }
+  save(); return {items,next,back,fwd,current,canBack,canFwd};
+}
+
+function setupSimpleGame(key, buttonText) {
+  const root=document.querySelector(`[data-simple-game="${key}"]`);
+  const deck=makeDeck(key, DATA[key]);
+  root.innerHTML = `
+    <div class="btns"><button class="btn next">${buttonText}</button></div>
+    <div class="btns"><button class="btn secondary back">Back</button><button class="btn secondary fwd">Forward</button></div>
+    <div class="btns"><button class="btn secondary save">Save to Favorites</button></div>
+    <div class="prompt">Tap the button to get a Space prompt!</div>
+    <div class="favorites">
+      <div class="fav-head"><h3>Favorites</h3><div><button class="btn secondary copy">Copy All</button> <button class="btn secondary clear">Clear</button></div></div>
+      <p class="muted empty">No favorites yet. Save any you love.</p><ul class="fav-list"></ul>
+    </div>`;
+  const p=root.querySelector(".prompt"), back=root.querySelector(".back"), fwd=root.querySelector(".fwd"), save=root.querySelector(".save"), list=root.querySelector(".fav-list"), empty=root.querySelector(".empty");
+  const favKey=`${NS}_${key}_favs`;
+  let favs=[]; try{favs=JSON.parse(localStorage.getItem(favKey)||"[]")}catch{}
+  function update() {
+    back.disabled=!deck.canBack(); fwd.disabled=!deck.canFwd();
+    const i=deck.current(); save.disabled=i==null; save.textContent=(i!=null && favs.includes(i))?"Saved":"Save to Favorites";
+  }
+  function renderFavs() {
+    list.innerHTML=""; empty.style.display=favs.length?"none":"block";
+    favs.forEach(i=>{const li=document.createElement("li");li.className="fav-item";const t=document.createElement("div");t.textContent=DATA[key][i];const b=document.createElement("button");b.textContent="Remove";b.onclick=()=>{favs=favs.filter(x=>x!==i);localStorage.setItem(favKey,JSON.stringify(favs));renderFavs();update();};li.append(t,b);list.appendChild(li);});
+  }
+  root.querySelector(".next").onclick=()=>{p.textContent="Here you go...!";setTimeout(()=>{const i=deck.next();p.textContent=DATA[key][i];update();},180)};
+  back.onclick=()=>{const i=deck.back();if(i!=null)p.textContent=DATA[key][i];update();};
+  fwd.onclick=()=>{const i=deck.fwd();if(i!=null)p.textContent=DATA[key][i];update();};
+  save.onclick=()=>{const i=deck.current();if(i==null)return;if(!favs.includes(i)){favs.push(i);localStorage.setItem(favKey,JSON.stringify(favs));renderFavs();toast("Saved to favorites");}update();};
+  root.querySelector(".copy").onclick=()=>{if(!favs.length)return toast("No favorites to copy");navigator.clipboard.writeText(favs.map(i=>DATA[key][i]).join("\n"));toast("Favorites copied");};
+  root.querySelector(".clear").onclick=()=>{favs=[];localStorage.setItem(favKey,"[]");renderFavs();update();toast("Favorites cleared");};
+  const i=deck.current(); if(i!=null)p.textContent=DATA[key][i]; renderFavs(); update();
+}
+
+setupSimpleGame("youare","You are...");
+setupSimpleGame("sounds","Who can sound like...");
+setupSimpleGame("faces","Make this face");
+
+
+setupSimpleGame("wyr","Would you rather...");
+
+function wirePlot(prefix, items, outId, nextId, backId, fwdId) {
+  const deck=makeDeck("plot_"+prefix,items), out=document.getElementById(outId), next=document.getElementById(nextId), back=document.getElementById(backId), fwd=document.getElementById(fwdId);
+  function update(){back.disabled=!deck.canBack();fwd.disabled=!deck.canFwd();}
+  next.onclick=()=>{const i=deck.next();out.textContent=items[i];update();};
+  back.onclick=()=>{const i=deck.back();if(i!=null)out.textContent=items[i];update();};
+  fwd.onclick=()=>{const i=deck.fwd();if(i!=null)out.textContent=items[i];update();};
+  const i=deck.current(); if(i!=null)out.textContent=items[i]; update();
+}
+wirePlot("title",DATA.titles,"titleOut","titleNext","titleBack","titleFwd");
+wirePlot("twist",DATA.twists,"twistOut","twistNext","twistBack","twistFwd");
+wirePlot("wrap",DATA.wraps,"wrapOut","wrapNext","wrapBack","wrapFwd");
+
+const doodleKey=`${NS}_doodle`;
+let doodleHist=[]; try{doodleHist=JSON.parse(localStorage.getItem(doodleKey+"_hist")||"[]")}catch{}
+let doodlePos=Number(localStorage.getItem(doodleKey+"_pos")||doodleHist.length);
+let doodleFavs=[]; try{doodleFavs=JSON.parse(localStorage.getItem(doodleKey+"_favs")||"[]")}catch{}
+const $=id=>document.getElementById(id);
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+function makeDoodle(){return{adjective:rand(DATA.adjectives),subject:rand(DATA.subjects),action:rand(DATA.actions)}}
+function doodleText(p){return p.adjective.charAt(0).toUpperCase()+p.adjective.slice(1)+" "+p.subject+" "+p.action}
+function showDoodle(p){$("slotAdj").textContent=p.adjective;$("slotSubject").textContent=p.subject;$("slotAction").textContent=p.action;$("doodlePrompt").textContent=doodleText(p)}
+function saveDoodleState(){localStorage.setItem(doodleKey+"_hist",JSON.stringify(doodleHist));localStorage.setItem(doodleKey+"_pos",String(doodlePos));}
+function currentDoodle(){return doodlePos>0?doodleHist[doodlePos-1]:null}
+function sameDoodle(a,b){return a&&b&&a.adjective===b.adjective&&a.subject===b.subject&&a.action===b.action}
+function updateDoodle(){
+  $("doodleBack").disabled=doodlePos<=1;$("doodleFwd").disabled=doodlePos>=doodleHist.length;
+  const p=currentDoodle();$("doodleSave").disabled=!p;$("doodleSave").textContent=p&&doodleFavs.some(f=>sameDoodle(f,p))?"Saved":"Save to Favorites";
+}
+function renderDoodleFavs(){
+  const list=$("doodleFavList");list.innerHTML="";$("doodleEmpty").style.display=doodleFavs.length?"none":"block";
+  doodleFavs.forEach((p,i)=>{const li=document.createElement("li");li.className="fav-item";const t=document.createElement("div");t.textContent=doodleText(p);const b=document.createElement("button");b.textContent="Remove";b.onclick=()=>{doodleFavs.splice(i,1);localStorage.setItem(doodleKey+"_favs",JSON.stringify(doodleFavs));renderDoodleFavs();updateDoodle();};li.append(t,b);list.appendChild(li);});
+}
+$("doodleNext").onclick=()=>{if(doodlePos<doodleHist.length)doodleHist.splice(doodlePos);const p=makeDoodle();doodleHist.push(p);if(doodleHist.length>500)doodleHist.shift();doodlePos=doodleHist.length;let c=0;const int=setInterval(()=>{$("slotAdj").textContent=rand(DATA.adjectives);$("slotSubject").textContent=rand(DATA.subjects);$("slotAction").textContent=rand(DATA.actions);if(++c>=9){clearInterval(int);showDoodle(p)}},65);saveDoodleState();updateDoodle();};
+$("doodleBack").onclick=()=>{if(doodlePos>1){doodlePos--;showDoodle(currentDoodle());saveDoodleState();updateDoodle();}};
+$("doodleFwd").onclick=()=>{if(doodlePos<doodleHist.length){doodlePos++;showDoodle(currentDoodle());saveDoodleState();updateDoodle();}};
+$("doodleSave").onclick=()=>{const p=currentDoodle();if(p&&!doodleFavs.some(f=>sameDoodle(f,p))){doodleFavs.push(p);localStorage.setItem(doodleKey+"_favs",JSON.stringify(doodleFavs));renderDoodleFavs();toast("Saved to favorites");}updateDoodle();};
+$("doodleCopy").onclick=()=>{if(!doodleFavs.length)return toast("No favorites to copy");navigator.clipboard.writeText(doodleFavs.map(doodleText).join("\n"));toast("Favorites copied");};
+$("doodleClear").onclick=()=>{doodleFavs=[];localStorage.setItem(doodleKey+"_favs","[]");renderDoodleFavs();updateDoodle();toast("Favorites cleared");};
+if(doodleHist.length){doodlePos=doodleHist.length;showDoodle(currentDoodle())} renderDoodleFavs();updateDoodle();
+
+let mediaRecorder=null, mediaStream=null, chunks=[], blobUrl=null;
+const recStart=$("recStart"),recPause=$("recPause"),recStop=$("recStop"),recPlay=$("recPlay"),recDownload=$("recDownload"),recStatus=$("recStatus"),player=$("player");
+const canPause=!!(window.MediaRecorder&&MediaRecorder.prototype&&typeof MediaRecorder.prototype.pause==="function");
+if(!canPause)recPause.style.display="none";
+function pickMime(){for(const t of ["audio/mp4;codecs=aac","audio/mp4","audio/webm;codecs=opus","audio/webm"])if(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))return t;return""}
+function ext(m){m=(m||"").toLowerCase();return m.includes("mp4")?"m4a":m.includes("webm")?"webm":"audio"}
+recStart.onclick=async()=>{recStart.disabled=true;try{mediaStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});const mime=pickMime();mediaRecorder=new MediaRecorder(mediaStream,mime?{mimeType:mime}:undefined);chunks=[];mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};mediaRecorder.onstart=()=>recStatus.textContent="Recording…";mediaRecorder.onpause=()=>recStatus.textContent="Paused";mediaRecorder.onresume=()=>recStatus.textContent="Recording…";mediaRecorder.onstop=()=>{const type=mediaRecorder.mimeType||mime||"audio/webm";const blob=new Blob(chunks,{type});if(blobUrl)URL.revokeObjectURL(blobUrl);blobUrl=URL.createObjectURL(blob);player.src=blobUrl;player.style.display="block";recPlay.disabled=false;recDownload.disabled=false;recStatus.textContent="Recording ready to play or download";if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null};recDownload.onclick=()=>{const a=document.createElement("a");a.href=blobUrl;a.download="space-plot-twist-story."+ext(type);document.body.appendChild(a);a.click();a.remove()}};mediaRecorder.start();recStop.disabled=false;if(canPause)recPause.disabled=false;recPlay.disabled=true;recDownload.disabled=true;}catch(e){recStatus.textContent="Microphone not available or permission denied.";recStart.disabled=false;}};
+recPause.onclick=()=>{if(!mediaRecorder)return;if(mediaRecorder.state==="recording"){mediaRecorder.pause();recPause.textContent="Resume"}else if(mediaRecorder.state==="paused"){mediaRecorder.resume();recPause.textContent="Pause"}};
+recStop.onclick=()=>{if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();recStart.disabled=false;recStop.disabled=true;if(canPause){recPause.disabled=true;recPause.textContent="Pause"}};
+recPlay.onclick=()=>{if(player.src)player.play()};
+</script>
+</body>
+</html>
